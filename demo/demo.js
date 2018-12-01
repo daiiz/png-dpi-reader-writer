@@ -104,6 +104,7 @@ class Png {
 
   writeChunkpHYs(devicePixelRatio = 1) {
     this.devicePixelRatio = devicePixelRatio;
+    if (this.haspHYs) return;
     this.readChunks();
   }
 
@@ -151,8 +152,7 @@ class Png {
     const type = [112, 72, 89, 115]; // "pHYs"
 
     const pixelsPerMeter = this.pixelsPerMeter * this.devicePixelRatio;
-    const data = [...bytes(pixelsPerMeter, 4), // 0,0,22,37 (Retina)
-    ...bytes(pixelsPerMeter, 4), 1];
+    const data = [...bytes(pixelsPerMeter, 4), ...bytes(pixelsPerMeter, 4), 1];
     const pHYsChunk = [0, 0, 0, 9, // 9 bytes
     ...type, ...data, ...bytes((0, _crc.crc)([...type, ...data]), 4)];
     const ptr = this.ptr - 8;
@@ -176,6 +176,7 @@ class Png {
         if (!this.haspHYs) {
           console.log('insert pHYs chunk');
           this.insertpHYs();
+          this.haspHYs = true;
         }
 
         break;
