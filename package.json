@@ -1,8 +1,8 @@
 {
   "name": "png-phys-chunk-writer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
-  "main": "lib/index.js",
+  "main": "src/index.js",
   "scripts": {
     "start": "./node_modules/.bin/http-server -c-1 -p 9006",
     "watch": "run-p watch:*",
