@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>gen-phys-png</title>
+    <style>
+      body, h1 {
+        font-family: roboto;
+      }
+      div {
+        margin: 15px;
+      }
+      #dummy {
+        width: 10mm;
+        height: 10mm;
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        background: #eee;
+        margin: 0;
+      }
+    </style>
+    <script src='./elements/phys-png.js'></script>
+  </head>
+  <body>
+    <h1>gen-phys-png</h1>
+    <button id='load-image-button'>load sample2.png</button>
+    <div>
+      <phys-png followdpi id='sample-image'></phys-png>
+    </div>
+    <div>
+      <!-- Gyazo macOS Retina-->
+      sample.png<br>
+      <phys-png followdpi src='./images/sample.png'></phys-png>
+    </div>
+    <div>
+      <!-- Gyazo Extension Retina-->
+      sample2.png<br>
+      <phys-png followdpi src='./images/sample2.png'></phys-png>
+    </div>
+    <div>
+      <!-- Gyazo Extension Retina (sample2 -> gen2)-->
+      <!-- https://i.gyazo.com/8120a5842dfe69bdc8dcc0c67c788d4f.png -->
+      gen2.png (raw)<br>
+      <phys-png followdpi src='./gen-images/gen2.png'></phys-png>
+      <br>
+      gen2.png (/thumb/1000)<br>
+      <phys-png followdpi src='./gen-images/gen2-1000.png'></phys-png>
+    </div>
+    <div id='dummy'></div>
+    <script src='./demo.js'></script>
+    <script>
+      document.querySelector('#load-image-button').addEventListener('click', e => {
+        loadImage('/demo/images/sample2.png')
+        // loadImage('/images/sample.png')
+      })
+    </script>
+  </body>
+</html>
