@@ -1,6 +1,6 @@
 # png-pHYs-chunk-writer
 
-# demo
+## demo
 ```
 $ npm run start
 ```
