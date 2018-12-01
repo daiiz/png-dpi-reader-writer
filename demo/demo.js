@@ -81,15 +81,7 @@ exports.Png = void 0;
 
 var _crc = require("./crc32");
 
-const toBin = (value, digits) => value.toString(2).padStart(digits, '0');
-
-const toHex = (value, digits) => value.toString(16).padStart(digits, '0');
-
-function bytes(num, bytes) {
-  const binStr = num.toString(2).padStart(bytes * 8, '0');
-  const binArr = binStr.match(/\d{8}/g);
-  return binArr.map(v => parseInt(v, 2));
-}
+var _utils = require("./utils");
 
 class Png {
   constructor(arrayBufferOrDataURI) {
@@ -126,7 +118,7 @@ class Png {
 
   isValid() {
     if (!this.byteArray) return false;
-    const signature = this.readBytes(8).map(v => toHex(v, 2));
+    const signature = this.readBytes(8).map(v => (0, _utils.toHex)(v, 2));
     return signature.join(' ').match(this.pngSignature);
   }
 
@@ -140,9 +132,9 @@ class Png {
   readIHDR() {
     // Length, ChunkType
     this.ptr += 4 + 4;
-    const width = this.readBytes(4).map(v => toBin(v, 8));
+    const width = this.readBytes(4).map(v => (0, _utils.toBin)(v, 8));
     this.width = parseInt(width.join(''), 2);
-    const height = this.readBytes(4).map(v => toBin(v, 8));
+    const height = this.readBytes(4).map(v => (0, _utils.toBin)(v, 8));
     this.height = parseInt(height.join(''), 2); // ビット深度, カラータイプ, 圧縮手法, フィルター手法, インターレース手法, CRC
 
     this.ptr += 1 + 1 + 1 + 1 + 1 + 4;
@@ -152,9 +144,9 @@ class Png {
     const type = [112, 72, 89, 115]; // "pHYs"
 
     const pixelsPerMeter = this.pixelsPerMeter * this.devicePixelRatio;
-    const data = [...bytes(pixelsPerMeter, 4), ...bytes(pixelsPerMeter, 4), 1];
+    const data = [...(0, _utils.bytes)(pixelsPerMeter, 4), ...(0, _utils.bytes)(pixelsPerMeter, 4), 1];
     const pHYsChunk = [0, 0, 0, 9, // 9 bytes
-    ...type, ...data, ...bytes((0, _crc.crc)([...type, ...data]), 4)];
+    ...type, ...data, ...(0, _utils.bytes)((0, _crc.crc)([...type, ...data]), 4)];
     const ptr = this.ptr - 8;
     this.byteArray = new Uint8Array([...Array.from(this.byteArray.slice(0, ptr)), ...pHYsChunk, ...Array.from(this.byteArray.slice(ptr))]);
     this.ptr += pHYsChunk.length;
@@ -167,7 +159,7 @@ class Png {
     while (true) {
       if (this.ptr >= this.byteArray.length) break;
       const lenBytes = this.readBytes(4);
-      let chunkLength = lenBytes.map(v => toBin(v, 8));
+      let chunkLength = lenBytes.map(v => (0, _utils.toBin)(v, 8));
       chunkLength = parseInt(chunkLength.join(''), 2);
       const bytes = this.readBytes(4);
       const chunkType = new TextDecoder('utf-8').decode(new Uint8Array(bytes));
@@ -202,4 +194,27 @@ class Png {
 
 exports.Png = Png;
 
-},{"./crc32":2}]},{},[1]);
+},{"./crc32":2,"./utils":5}],5:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.bytes = bytes;
+exports.toHex = exports.toBin = void 0;
+
+const toBin = (value, digits) => value.toString(2).padStart(digits, '0');
+
+exports.toBin = toBin;
+
+const toHex = (value, digits) => value.toString(16).padStart(digits, '0');
+
+exports.toHex = toHex;
+
+function bytes(num, bytes) {
+  const binStr = num.toString(2).padStart(bytes * 8, '0');
+  const binArr = binStr.match(/\d{8}/g);
+  return binArr.map(v => parseInt(v, 2));
+}
+
+},{}]},{},[1]);
