@@ -15,18 +15,36 @@
         width: 400px;
       }
     </style>
-    <script src='./elements/phys-png.js'></script>
   </head>
   <body>
-    <h1>gen-phys-png</h1>
-    <input type='text' value='' placeholder='8120a5842dfe69bdc8dcc0c67c788d4f' />
+    <h1>pHYs-png demo</h1>
+    <input type='text' id='gyazoId' value='' placeholder='8120a5842dfe69bdc8dcc0c67c788d4f' />
     <div>
       <h2><pre>&lt;phys-png&gt;</pre></h2>
-      <phys-png followdpi src='http://gyakky.herokuapp.com/igyazo/8120a5842dfe69bdc8dcc0c67c788d4f'></phys-png>
+      <p>
+        Let's render the image captured by <a href=''>Gyazo Extension</a> equipped
+        with <code>png-phys-chunk-writer</code> feature!
+      </p>
+      <phys-png followdpi></phys-png>
     </div>
     <div>
       <h2><pre>&lt;img&gt;</pre></h2>
-      <img src='http://gyakky.herokuapp.com/igyazo/8120a5842dfe69bdc8dcc0c67c788d4f' />
+      <img src/>
     </div>
+    <script src='./demo.js'></script>
+    <script>
+      const physPng = document.querySelector('phys-png')
+      const img = document.querySelector('img')
+      const updateImage = (target) => {
+        const gyazoId = target.value || target.placeholder
+        const srcUrl = `https://gyakky.herokuapp.com/gyazo/raw/${gyazoId}`
+        physPng.setAttribute('src', srcUrl)
+        img.setAttribute('src', srcUrl)
+      }
+      document.querySelector('#gyazoId').addEventListener('change', (e) => {
+        updateImage(e.target)
+      })
+      updateImage(document.querySelector('#gyazoId'))
+    </script>
   </body>
 </html>

@@ -1,4 +1,5 @@
 import Png from '../../src/'
+import 'phys-png'
 
 const loadImage = async srcUrl => {
   const res = await fetch(srcUrl, {mode: 'cors'})
