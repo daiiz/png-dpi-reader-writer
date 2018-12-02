@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset='utf-8' />
-    <title>gen-phys-png</title>
+    <title>pHYs-png Gyazo demo</title>
     <style>
       body, h1 {
         font-family: roboto;
@@ -10,16 +10,37 @@
       div {
         margin: 15px;
       }
+      div.img {
+        padding: 10px;
+      }
+      .img.default {
+        background-color: #efefef;
+        min-width: calc(100% - 50px);
+        width: fit-content;
+        border-radius: 1px;
+      }
       input {
         font-size: 20px;
         width: 400px;
       }
+      #history {
+        display: flex;
+      }
+      #history a {
+        font-size: 10pt;
+        cursor: pointer;
+        color: #1555f3;
+        text-decoration: underline;
+        margin-left: 10px;
+        margin-bottom: 10px;
+      }
     </style>
   </head>
   <body>
-    <h1>pHYs-png demo</h1>
-    <input type='text' id='gyazoId' value='' placeholder='8120a5842dfe69bdc8dcc0c67c788d4f' />
-    <div>
+    <h1>pHYs-png Gyazo demo</h1>
+    <input type='text' id='gyazoId' value='' placeholder='8120a5842dfe69bdc8dcc0c67c788d4f'>
+    <div id='history'></div>
+    <div class='img'>
       <h2><pre>&lt;phys-png&gt;</pre></h2>
       <p>
         Let's render the image captured by <a href=''>Gyazo Extension</a> equipped
@@ -27,24 +48,42 @@
       </p>
       <phys-png followdpi></phys-png>
     </div>
-    <div>
+    <div class='img default'>
       <h2><pre>&lt;img&gt;</pre></h2>
-      <img src/>
+      <img src='#' />
     </div>
     <script src='./demo.js'></script>
     <script>
+      const input = document.querySelector('#gyazoId')
+      const history = document.querySelector('#history')
       const physPng = document.querySelector('phys-png')
       const img = document.querySelector('img')
       const updateImage = (target) => {
-        const gyazoId = target.value || target.placeholder
+        img.removeAttribute('src')
+        const toks = (target.value || target.placeholder).split('//gyazo.com/')
+        const gyazoId = toks[toks.length - 1]
         const srcUrl = `https://gyakky.herokuapp.com/gyazo/raw/${gyazoId}`
         physPng.setAttribute('src', srcUrl)
         img.setAttribute('src', srcUrl)
+        addToHistory(gyazoId)
       }
-      document.querySelector('#gyazoId').addEventListener('change', (e) => {
+      const addToHistory = gyazoId => {
+        const hasId = Array.from(history.querySelectorAll('a')).some(a => a.dataset.gyazoId === gyazoId)
+        if (hasId) return
+        const a = document.createElement('a')
+        a.innerHTML = gyazoId.substring(0, 8)
+        a.dataset.gyazoId = gyazoId
+        a.onclick = e => {
+          input.value = e.target.dataset.gyazoId
+          updateImage(input)
+        }
+        document.querySelector('#history').appendChild(a)
+      }
+      input.addEventListener('change', (e) => {
         updateImage(e.target)
       })
-      updateImage(document.querySelector('#gyazoId'))
+      updateImage(input)
+      addToHistory('a444c4fe89267755e7bcf4217f81740b')
     </script>
   </body>
 </html>
