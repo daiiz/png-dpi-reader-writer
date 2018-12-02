@@ -10,20 +10,10 @@
       div {
         margin: 15px;
       }
-      #dummy {
-        width: 10mm;
-        height: 10mm;
-        position: fixed;
-        bottom: 0;
-        right: 0;
-        background: #eee;
-        margin: 0;
-      }
     </style>
-    <script src='./elements/phys-png.js'></script>
   </head>
   <body>
-    <h1>gen-phys-png</h1>
+    <h1>png-phys-chunk-writer demo</h1>
     <button id='load-image-button'>load sample2.png</button>
     <div>
       <phys-png followdpi id='sample-image'></phys-png>
@@ -49,7 +39,9 @@
       gen3.png (raw)<br>
       <phys-png followdpi src='./gen-images/gen3.png'></phys-png>
     </div>
-    <div id='dummy'></div>
+    <a href='./gyazo.html'>Gyazo demo</a>
+    <br>
+    <br>
     <script src='./demo.js'></script>
     <script>
       document.querySelector('#load-image-button').addEventListener('click', e => {
