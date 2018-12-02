@@ -15,29 +15,30 @@
   <body>
     <h1>png-phys-chunk-writer demo</h1>
     <button id='load-image-button'>load sample2.png</button>
+    (Use current window's <code>devicePixelRatio</code>)
     <div>
       <phys-png followdpi id='sample-image'></phys-png>
     </div>
     <div>
       <!-- Gyazo macOS Retina-->
       sample.png<br>
-      <phys-png followdpi src='./images/sample.png'></phys-png>
+      <phys-png followdpi src='./images/raw/sample.png'></phys-png>
     </div>
     <div>
       <!-- Gyazo Extension Retina-->
       sample2.png<br>
-      <phys-png followdpi src='./images/sample2.png'></phys-png>
+      <phys-png followdpi src='./images/raw/sample2.png'></phys-png>
     </div>
     <div>
       <!-- Gyazo Extension Retina (sample2 -> gen2)-->
       <!-- https://i.gyazo.com/8120a5842dfe69bdc8dcc0c67c788d4f.png -->
       gen2.png (raw)<br>
-      <phys-png followdpi src='./gen-images/gen2.png'></phys-png>
+      <phys-png followdpi src='./images/gen/gen2.png'></phys-png>
       <br>
       gen2.png (/thumb/1000)<br>
-      <phys-png followdpi src='./gen-images/gen2-1000.png'></phys-png>
+      <phys-png followdpi src='./images/gen/gen2-1000.png'></phys-png>
       gen3.png (raw)<br>
-      <phys-png followdpi src='./gen-images/gen3.png'></phys-png>
+      <phys-png followdpi src='./images/gen/gen3.png'></phys-png>
     </div>
     <a href='./gyazo.html'>Gyazo demo</a>
     <br>
@@ -45,8 +46,7 @@
     <script src='./dist/demo.js'></script>
     <script>
       document.querySelector('#load-image-button').addEventListener('click', e => {
-        loadImage('./images/sample2.png')
-        // loadImage('/images/sample.png')
+        loadImage('./images/raw/sample2.png')
       })
     </script>
   </body>
