@@ -8,7 +8,7 @@
         font-family: roboto;
       }
       div {
-        margin: 15px;
+        margin: 16px;
       }
       div.img {
         padding: 10px;
@@ -20,8 +20,10 @@
         border-radius: 1px;
       }
       input {
-        font-size: 20px;
+        font-size: 14pt;
         width: 400px;
+        padding: 1px;
+        margin-left: 10px;
       }
       #history {
         display: flex;
@@ -34,19 +36,24 @@
         margin-left: 10px;
         margin-bottom: 10px;
       }
+      a:visited {
+        color: #1555f3;
+      }
     </style>
   </head>
   <body>
     <h1>pHYs-png Gyazo demo</h1>
-    <input type='text' id='gyazoId' value='' placeholder='8120a5842dfe69bdc8dcc0c67c788d4f'>
+    <div>
+      <input type='text' id='gyazoId' value='' placeholder='8120a5842dfe69bdc8dcc0c67c788d4f'>
+    </div>
     <div id='history'></div>
     <div class='img'>
       <h2><pre>&lt;phys-png&gt;</pre></h2>
       <p>
         Let's render the image captured by
-        <a href='https://github.com/daiiz/gyazo-browser-extension/tree/phys-png'>
+        <a target='_blank' href='https://github.com/daiiz/gyazo-browser-extension/tree/phys-png'>
           daiiz/gyazo-browser-extension#phys-png
-        </a>.
+        </a> or Gyazo for macOS (Mojave).
       </p>
       <phys-png
         followdpi src='https://gyakky.herokuapp.com/gyazo/raw/8120a5842dfe69bdc8dcc0c67c788d4f'>
