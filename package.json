@@ -6,7 +6,7 @@
   "scripts": {
     "start": "./node_modules/.bin/http-server -c-1 -p 9006",
     "watch": "run-p watch:*",
-    "watch:demo": "watchify demo/src/index.js -v -t babelify -o demo/demo.js",
+    "watch:demo": "watchify demo/src/index.js -v -t babelify -o demo/dist/demo.js",
     "build": "browserify src/index.js -v -t babelify -o lib/index.js"
   },
   "author": "Daiki Iizuka",
