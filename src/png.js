@@ -20,7 +20,9 @@ export class Png {
   }
 
   get base64EncodedURI () {
-    return `${this.dataURIScheme},${btoa(String.fromCharCode(...this.byteArray))}`
+    return `${this.dataURIScheme},` + btoa(this.byteArray.reduce((data, byte) => {
+      return data + String.fromCharCode(byte)
+    }, ''))
   }
 
   convertToByteArray (dataURI) {
