@@ -254,7 +254,6 @@ const writeChunkPhys = (byteArray, dpr = 1) => {
 
     if (chunkType === 'IDAT') {
       if (!hasChunkPhys) {
-        console.log('insert pHYs chunk');
         newByteArray = insertChunkPhys(byteArray, ptr, dpr);
         hasChunkPhys = true;
       }
