@@ -1,24 +1,16 @@
-import Png from '../../src/'
+import {convertToByteArray, convertToDataURI, writeChunkPhys} from '../../src/'
 import 'phys-png'
 
 const loadImage = async srcUrl => {
   const res = await fetch(srcUrl, {mode: 'cors'})
   const arrayBuffer = await res.arrayBuffer()
   if (!arrayBuffer) return
-  // const png = new Png(arrayBuffer)
-  // base64 stringを渡す実験
-  const base64DataURI = base64EncodedURI(arrayBuffer)
-  const png = new Png(base64DataURI)
-  png.writeChunkpHYs(devicePixelRatio)
-
-  console.log(png)
-  showImage(png.base64EncodedURI)
-}
-
-// XXX: 実験用
-const base64EncodedURI = arrayBuffer => {
-  const byteArray = new Uint8Array(arrayBuffer)
-  return `data:image/png;base64,${btoa(String.fromCharCode(...byteArray))}`
+  // 遠回しだが、base64 stringを渡す実験
+  const base64DataURI = convertToDataURI(new Uint8Array(arrayBuffer))
+  const orgByteArray = convertToByteArray(base64DataURI)
+  const dpr = window.devicePixelRatio
+  const genByteArray = writeChunkPhys(orgByteArray, dpr)
+  showImage(convertToDataURI(genByteArray))
 }
 
 const showImage = dataUrl => {
