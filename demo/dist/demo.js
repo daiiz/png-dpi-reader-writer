@@ -14,7 +14,8 @@ const loadImage = async srcUrl => {
 
   const base64DataURI = (0, _src.convertToDataURI)(new Uint8Array(arrayBuffer));
   const orgByteArray = (0, _src.convertToByteArray)(base64DataURI);
-  const genByteArray = (0, _src.writeChunkPhys)(orgByteArray, window.devicePixelRatio);
+  const dpr = window.devicePixelRatio;
+  const genByteArray = (0, _src.writeChunkPhys)(orgByteArray, dpr);
   showImage((0, _src.convertToDataURI)(genByteArray));
 };
 
@@ -315,7 +316,7 @@ const insertChunkPhys = (byteArray, ptr, dpr = 1) => {
   // Number of pixels per unit when devicePixelRatio is 1
 
   const PX_PER_METER = 2835;
-  const pixelsPerMeter = PX_PER_METER * dpr;
+  const pixelsPerMeter = Math.floor(PX_PER_METER * dpr);
   const data = [...(0, _utils.bytes)(pixelsPerMeter, 4), ...(0, _utils.bytes)(pixelsPerMeter, 4), 1];
   const pHYsChunk = [0, 0, 0, 9, // 9 bytes
   ...type, ...data, ...(0, _utils.bytes)((0, _crc.crc)([...type, ...data]), 4)];

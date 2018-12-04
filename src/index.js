@@ -89,7 +89,7 @@ const insertChunkPhys = (byteArray, ptr, dpr=1) => {
   const type = [112, 72, 89, 115] // "pHYs"
   // Number of pixels per unit when devicePixelRatio is 1
   const PX_PER_METER = 2835
-  const pixelsPerMeter = PX_PER_METER * dpr
+  const pixelsPerMeter = Math.floor(PX_PER_METER * dpr)
   const data = [
     ...bytes(pixelsPerMeter, 4),
     ...bytes(pixelsPerMeter, 4),

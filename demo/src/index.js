@@ -8,7 +8,8 @@ const loadImage = async srcUrl => {
   // 遠回しだが、base64 stringを渡す実験
   const base64DataURI = convertToDataURI(new Uint8Array(arrayBuffer))
   const orgByteArray = convertToByteArray(base64DataURI)
-  const genByteArray = writeChunkPhys(orgByteArray, window.devicePixelRatio)
+  const dpr = window.devicePixelRatio
+  const genByteArray = writeChunkPhys(orgByteArray, dpr)
   showImage(convertToDataURI(genByteArray))
 }
 
