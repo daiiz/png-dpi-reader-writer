@@ -49,10 +49,8 @@ export const writeChunkPhys = (byteArray, dpr=1) => {
     switch (chunkType) {
       case 'pHYs':
         hasChunkPhys = true
-        break
-      default:
-        ptr.pos += chunkLength
     }
+    ptr.pos += chunkLength
     ptr.pos += 4 // CRC
   }
 
