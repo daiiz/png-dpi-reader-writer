@@ -1,6 +1,6 @@
 {
   "name": "png-phys-chunk-writer",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "",
   "main": "src/index.js",
   "scripts": {
@@ -19,9 +19,9 @@
     "browserify": "^16.2.3",
     "http-server": "^0.11.1",
     "npm-run-all": "^4.1.5",
+    "phys-png": "github:daiiz/pHYs-png",
     "watchify": "^3.11.0"
   },
   "dependencies": {
-    "phys-png": "github:daiiz/pHYs-png"
   }
 }
