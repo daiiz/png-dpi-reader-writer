@@ -85,7 +85,7 @@ const readIHDR = (byteArray, ptr) => {
   return {width, height}
 }
 
-const insertChunkPhys = (byteArray, ptr, dpr = 1) => {
+const insertChunkPhys = (byteArray, ptr, dpr=1) => {
   const type = [112, 72, 89, 115] // "pHYs"
   // Number of pixels per unit when devicePixelRatio is 1
   const PX_PER_METER = 2835
