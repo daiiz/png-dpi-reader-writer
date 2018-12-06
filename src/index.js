@@ -18,4 +18,9 @@ const convertToByteArray = dataURI => {
   return array
 }
 
-export {readPngDpi, writePngDpi, convertToDataURI, convertToByteArray}
+const writeChunkPhys = writePngDpi
+
+export {
+  readPngDpi, writePngDpi, convertToDataURI, convertToByteArray,
+  writeChunkPhys
+}
