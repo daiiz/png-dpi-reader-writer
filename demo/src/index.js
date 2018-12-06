@@ -1,4 +1,4 @@
-import {convertToByteArray, convertToDataURI, writeChunkPhys} from '../../src/'
+import {convertToByteArray, convertToDataURI, writePngDpi} from '../../src/'
 import 'phys-png'
 
 const loadImage = async srcUrl => {
@@ -9,7 +9,7 @@ const loadImage = async srcUrl => {
   const base64DataURI = convertToDataURI(new Uint8Array(arrayBuffer))
   const orgByteArray = convertToByteArray(base64DataURI)
   const dpr = window.devicePixelRatio
-  const genByteArray = writeChunkPhys(orgByteArray, dpr)
+  const genByteArray = writePngDpi(orgByteArray, dpr)
   showImage(convertToDataURI(genByteArray))
 }
 
