@@ -1,5 +1,5 @@
 import {convertToByteArray, convertToDataURI, writePngDpi} from '../../src/'
-import 'phys-png'
+import {DpiAwareImage} from 'dpi-aware-image'
 
 const loadImage = async srcUrl => {
   const res = await fetch(srcUrl, {mode: 'cors'})
@@ -19,3 +19,4 @@ const showImage = dataUrl => {
 }
 
 window.loadImage = loadImage
+window.customElements.define(DpiAwareImage.is, DpiAwareImage)
