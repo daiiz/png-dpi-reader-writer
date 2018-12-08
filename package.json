@@ -1,6 +1,6 @@
 {
-  "name": "png-phys-chunk-writer",
-  "version": "3.0.4",
+  "name": "png-chunk-phys",
+  "version": "3.1.5",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
