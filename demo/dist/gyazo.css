@@ -1,0 +1,42 @@
+body, h1 {
+  font-family: roboto;
+}
+
+div {
+  margin: 16px;
+}
+
+div.img {
+  padding: 10px;
+}
+
+.img.default {
+  background-color: #efefef;
+  min-width: calc(100% - 50px);
+  width: fit-content;
+  border-radius: 1px;
+}
+
+input {
+  font-size: 14pt;
+  width: 400px;
+  padding: 1px;
+  margin-left: 10px;
+}
+
+#history {
+  display: flex;
+}
+
+#history a {
+  font-size: 10pt;
+  cursor: pointer;
+  color: #1555f3;
+  text-decoration: underline;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+a:visited {
+  color: #1555f3;
+}

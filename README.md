@@ -1,7 +1,7 @@
-# png-pHYs-chunk-writer
-- https://daiiz.github.io/png-pHYs-chunk-writer/demo/index.html
-- https://daiiz.github.io/png-pHYs-chunk-writer/demo/demo.html
-- https://daiiz.github.io/png-pHYs-chunk-writer/demo/gyazo.html
+# png-chunk-pHYs
+- https://daiiz.github.io/png-chunk-pHYs/demo/index.html
+- https://daiiz.github.io/png-chunk-pHYs/demo/demo.html
+- https://daiiz.github.io/png-chunk-pHYs/demo/gyazo.html
 
 ## demo
 ```
