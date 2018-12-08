@@ -15,7 +15,7 @@ const loadImage = async srcUrl => {
   const base64DataURI = (0, _src.convertToDataURI)(new Uint8Array(arrayBuffer));
   const orgByteArray = (0, _src.convertToByteArray)(base64DataURI);
   const dpr = window.devicePixelRatio;
-  const genByteArray = (0, _src.writeChunkPhys)(orgByteArray, dpr);
+  const genByteArray = (0, _src.writePngDpi)(orgByteArray, dpr);
   showImage((0, _src.convertToDataURI)(genByteArray));
 };
 
@@ -204,11 +204,23 @@ function crc(buf) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+Object.defineProperty(exports, "writePngDpi", {
+  enumerable: true,
+  get: function () {
+    return _writer.writePngDpi;
+  }
+});
+Object.defineProperty(exports, "readPngDpi", {
+  enumerable: true,
+  get: function () {
+    return _reader.readPngDpi;
+  }
+});
 exports.writeChunkPhys = exports.convertToByteArray = exports.convertToDataURI = void 0;
 
-var _crc = require("./crc32");
+var _writer = require("./writer");
 
-var _utils = require("./utils");
+var _reader = require("./reader");
 
 const dataURIScheme = 'data:image/png;base64,';
 
@@ -233,24 +245,183 @@ const convertToByteArray = dataURI => {
 };
 
 exports.convertToByteArray = convertToByteArray;
+const writeChunkPhys = _writer.writePngDpi;
+exports.writeChunkPhys = writeChunkPhys;
 
-const writeChunkPhys = (byteArray, dpr = 1) => {
+},{"./reader":5,"./writer":7}],5:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.readPngDpi = readPngDpi;
+
+var _utils = require("./utils");
+
+function readPngDpi(arrayBuffer) {
   const ptr = {
     pos: 0
   };
-  if (!isPng(byteArray, ptr)) return byteArray;
+  const byteArray = new Uint8Array(arrayBuffer);
+  return readChunks(byteArray, ptr);
+}
+
+const readpHYs = (byteArray, ptr) => {
+  // https://tools.ietf.org/html/rfc2083#page-22
+  const pixelsPerUnitXAxis = parseInt((0, _utils.readBytes)(byteArray, ptr, 4).map(v => (0, _utils.toBin)(v, 8)).join(''), 2);
+  const pixelsPerUnitYAxis = parseInt((0, _utils.readBytes)(byteArray, ptr, 4).map(v => (0, _utils.toBin)(v, 8)).join(''), 2);
+  const unitSpecifier = (0, _utils.readBytes)(byteArray, ptr, 1).pop();
+  let dpi = 72;
+
+  if (unitSpecifier === 1) {
+    // dots per inch を計算する
+    dpi = Math.floor(Math.max(pixelsPerUnitXAxis, pixelsPerUnitYAxis) / (unitSpecifier * 39.3));
+  }
+
+  return dpi;
+};
+
+const readChunks = (byteArray, ptr) => {
+  if (!(0, _utils.isPng)(byteArray, ptr)) {
+    return {
+      width: undefined,
+      height: undefined,
+      dpi: undefined
+    };
+  }
+
   const {
     width,
     height
-  } = readIHDR(byteArray, ptr);
+  } = (0, _utils.readIHDR)(byteArray, ptr);
+  let dpi;
+
+  while (true) {
+    if (ptr.pos >= byteArray.length) break;
+    let chunkLength = (0, _utils.readBytes)(byteArray, ptr, 4).map(v => (0, _utils.toBin)(v, 8));
+    chunkLength = parseInt(chunkLength.join(''), 2);
+    const chunkType = new TextDecoder('utf-8').decode(new Uint8Array((0, _utils.readBytes)(byteArray, ptr, 4)));
+    if (chunkType === 'IDAT' || chunkType === 'IEND') break;
+
+    switch (chunkType) {
+      case 'pHYs':
+        dpi = readpHYs(byteArray, ptr);
+        break;
+
+      default:
+        ptr.pos += chunkLength;
+    }
+
+    ptr.pos += 4; // CRC
+  }
+
+  return {
+    width,
+    height,
+    dpi
+  };
+};
+
+},{"./utils":6}],6:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.bytes = bytes;
+exports.isPng = isPng;
+exports.readBytes = readBytes;
+exports.readIHDR = readIHDR;
+exports.toHex = exports.toBin = void 0;
+
+const toBin = (value, digits) => value.toString(2).padStart(digits, '0');
+
+exports.toBin = toBin;
+
+const toHex = (value, digits) => value.toString(16).padStart(digits, '0');
+
+exports.toHex = toHex;
+
+function bytes(num, bytes) {
+  const binStr = num.toString(2).padStart(bytes * 8, '0');
+  const binArr = binStr.match(/\d{8}/g);
+  return binArr.map(v => parseInt(v, 2));
+}
+
+function isPng(byteArray, ptr) {
+  const pngSignature = /^89 50 4E 47 0D 0A 1A 0A$/i;
+  const signature = readBytes(byteArray, ptr, 8).map(v => toHex(v, 2));
+  return signature.join(' ').match(pngSignature);
+}
+
+function readBytes(byteArray, ptr, bytes) {
+  const {
+    pos
+  } = ptr;
+  const res = byteArray.slice(pos, pos + bytes);
+  ptr.pos += bytes;
+  return Array.from(res);
+}
+
+function readIHDR(byteArray, ptr) {
+  // https://tools.ietf.org/html/rfc2083#page-15
+  // Length, ChunkType
+  ptr.pos += 4 + 4; // Width
+
+  let width = readBytes(byteArray, ptr, 4).map(v => toBin(v, 8));
+  width = parseInt(width.join(''), 2); // Height
+
+  let height = readBytes(byteArray, ptr, 4).map(v => toBin(v, 8));
+  height = parseInt(height.join(''), 2); // Bit depth, Color type, Compression method, Filter method, nterlace method, CRC
+
+  ptr.pos += 1 + 1 + 1 + 1 + 1 + 4;
+  return {
+    width,
+    height
+  };
+}
+
+},{}],7:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.writePngDpi = writePngDpi;
+
+var _crc = require("./crc32");
+
+var _utils = require("./utils");
+
+function insertChunkPhys(byteArray, ptr, dpr = 1) {
+  const type = [112, 72, 89, 115]; // "pHYs"
+  // Number of pixels per unit when devicePixelRatio is 1
+
+  const PX_PER_METER = 2835;
+  const pixelsPerMeter = Math.floor(PX_PER_METER * dpr);
+  const data = [...(0, _utils.bytes)(pixelsPerMeter, 4), ...(0, _utils.bytes)(pixelsPerMeter, 4), 1];
+  const pHYsChunk = [0, 0, 0, 9, // 9 bytes
+  ...type, ...data, ...(0, _utils.bytes)((0, _crc.crc)([...type, ...data]), 4)];
+  const pos = ptr.pos - 8;
+  const newByteArray = new Uint8Array([...Array.from(byteArray.slice(0, pos)), ...pHYsChunk, ...Array.from(byteArray.slice(pos))]);
+  ptr.pos += pHYsChunk.length;
+  return newByteArray;
+}
+
+function writePngDpi(byteArray, dpr = 1) {
+  const ptr = {
+    pos: 0
+  };
+  if (!(0, _utils.isPng)(byteArray, ptr)) return byteArray;
+  (0, _utils.readIHDR)(byteArray, ptr);
   let hasChunkPhys = false;
   let newByteArray;
 
   while (true) {
     if (ptr.pos >= byteArray.length) break;
-    let chunkLength = readBytes(byteArray, ptr, 4).map(v => (0, _utils.toBin)(v, 8));
+    let chunkLength = (0, _utils.readBytes)(byteArray, ptr, 4).map(v => (0, _utils.toBin)(v, 8));
     chunkLength = parseInt(chunkLength.join(''), 2);
-    const chunkType = new TextDecoder('utf-8').decode(new Uint8Array(readBytes(byteArray, ptr, 4)));
+    const chunkType = new TextDecoder('utf-8').decode(new Uint8Array((0, _utils.readBytes)(byteArray, ptr, 4)));
 
     if (chunkType === 'IDAT') {
       if (!hasChunkPhys) {
@@ -268,84 +439,10 @@ const writeChunkPhys = (byteArray, dpr = 1) => {
         hasChunkPhys = true;
     }
 
-    ptr.pos += chunkLength;
-    ptr.pos += 4; // CRC
+    ptr.pos += chunkLength + 4; // CRC
   }
 
   return newByteArray || byteArray;
-};
-
-exports.writeChunkPhys = writeChunkPhys;
-
-const isPng = (byteArray, ptr) => {
-  const pngSignature = /^89 50 4E 47 0D 0A 1A 0A$/i;
-  const signature = readBytes(byteArray, ptr, 8).map(v => (0, _utils.toHex)(v, 2));
-  return signature.join(' ').match(pngSignature);
-};
-
-const readBytes = (byteArray, ptr, bytes) => {
-  const {
-    pos
-  } = ptr;
-  const res = byteArray.slice(pos, pos + bytes);
-  ptr.pos += bytes;
-  return Array.from(res);
-};
-
-const readIHDR = (byteArray, ptr) => {
-  // https://tools.ietf.org/html/rfc2083#page-15
-  // Length, ChunkType
-  ptr.pos += 4 + 4; // Width
-
-  let width = readBytes(byteArray, ptr, 4).map(v => (0, _utils.toBin)(v, 8));
-  width = parseInt(width.join(''), 2); // Height
-
-  let height = readBytes(byteArray, ptr, 4).map(v => (0, _utils.toBin)(v, 8));
-  height = parseInt(height.join(''), 2); // Bit depth, Color type, Compression method, Filter method, nterlace method, CRC
-
-  ptr.pos += 1 + 1 + 1 + 1 + 1 + 4;
-  return {
-    width,
-    height
-  };
-};
-
-const insertChunkPhys = (byteArray, ptr, dpr = 1) => {
-  const type = [112, 72, 89, 115]; // "pHYs"
-  // Number of pixels per unit when devicePixelRatio is 1
-
-  const PX_PER_METER = 2835;
-  const pixelsPerMeter = Math.floor(PX_PER_METER * dpr);
-  const data = [...(0, _utils.bytes)(pixelsPerMeter, 4), ...(0, _utils.bytes)(pixelsPerMeter, 4), 1];
-  const pHYsChunk = [0, 0, 0, 9, // 9 bytes
-  ...type, ...data, ...(0, _utils.bytes)((0, _crc.crc)([...type, ...data]), 4)];
-  const pos = ptr.pos - 8;
-  const newByteArray = new Uint8Array([...Array.from(byteArray.slice(0, pos)), ...pHYsChunk, ...Array.from(byteArray.slice(pos))]);
-  ptr.pos += pHYsChunk.length;
-  return newByteArray;
-};
-
-},{"./crc32":3,"./utils":5}],5:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.bytes = bytes;
-exports.toHex = exports.toBin = void 0;
-
-const toBin = (value, digits) => value.toString(2).padStart(digits, '0');
-
-exports.toBin = toBin;
-
-const toHex = (value, digits) => value.toString(16).padStart(digits, '0');
-
-exports.toHex = toHex;
-
-function bytes(num, bytes) {
-  const binStr = num.toString(2).padStart(bytes * 8, '0');
-  const binArr = binStr.match(/\d{8}/g);
-  return binArr.map(v => parseInt(v, 2));
 }
 
-},{}]},{},[1]);
+},{"./crc32":3,"./utils":6}]},{},[1]);
