@@ -1,5 +1,4 @@
 npm run build
-npm run build-demo
 
 rm -r ./gh-pages
 mkdir gh-pages
