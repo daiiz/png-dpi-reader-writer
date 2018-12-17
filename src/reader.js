@@ -1,13 +1,9 @@
-import {toBin, isPng, readIHDR, readBytes} from './share'
+import {toBin, isPng, readIHDR, readBytes, getCharCodes} from './share'
 
 export function parsePngFormat (arrayBuffer) {
   const ptr = {pos: 0}
   const byteArray = new Uint8Array(arrayBuffer)
   return readChunks(byteArray, ptr)
-}
-
-const getCharCodes = str => {
-  return str.split('').map(c => c.charCodeAt(0)).join(' ')
 }
 
 const readpHYs = (byteArray, ptr) => {

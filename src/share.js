@@ -34,6 +34,10 @@ export function readIHDR (byteArray, ptr) {
   return {width, height}
 }
 
+export function getCharCodes (str) {
+  return str.split('').map(c => c.charCodeAt(0)).join(' ')
+}
+
 const dataURIScheme = 'data:image/png;base64,'
 
 export function convertToDataURI (byteArray) {
