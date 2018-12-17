@@ -15,7 +15,7 @@ const loadImage = async srcUrl => {
   const base64DataURI = (0, _src.convertToDataURI)(new Uint8Array(arrayBuffer));
   const orgByteArray = (0, _src.convertToByteArray)(base64DataURI);
   const dpr = window.devicePixelRatio;
-  const genByteArray = (0, _src.writePngDpi)(orgByteArray, dpr);
+  const genByteArray = (0, _src.writePngDpi)(orgByteArray, dpr * 72);
   showImage((0, _src.convertToDataURI)(genByteArray));
 };
 
@@ -502,10 +502,6 @@ function parsePngFormat(arrayBuffer) {
   return readChunks(byteArray, ptr);
 }
 
-const getCharCodes = str => {
-  return str.split('').map(c => c.charCodeAt(0)).join(' ');
-};
-
 const readpHYs = (byteArray, ptr) => {
   // https://tools.ietf.org/html/rfc2083#page-22
   const pixelsPerUnitXAxis = parseInt((0, _share.readBytes)(byteArray, ptr, 4).map(v => (0, _share.toBin)(v, 8)).join(''), 2);
@@ -541,10 +537,10 @@ const readChunks = (byteArray, ptr) => {
     let chunkLength = (0, _share.readBytes)(byteArray, ptr, 4).map(v => (0, _share.toBin)(v, 8));
     chunkLength = parseInt(chunkLength.join(''), 2);
     const chunkType = (0, _share.readBytes)(byteArray, ptr, 4).join(' ');
-    if (chunkType === getCharCodes('IDAT') || chunkType === getCharCodes('IEND')) break;
+    if (chunkType === (0, _share.getCharCodes)('IDAT') || chunkType === (0, _share.getCharCodes)('IEND')) break;
 
     switch (chunkType) {
-      case getCharCodes('pHYs'):
+      case (0, _share.getCharCodes)('pHYs'):
         dpi = readpHYs(byteArray, ptr);
         break;
 
@@ -572,6 +568,7 @@ exports.bytes = bytes;
 exports.isPng = isPng;
 exports.readBytes = readBytes;
 exports.readIHDR = readIHDR;
+exports.getCharCodes = getCharCodes;
 exports.convertToDataURI = convertToDataURI;
 exports.convertToByteArray = convertToByteArray;
 exports.toHex = exports.toBin = void 0;
@@ -621,6 +618,10 @@ function readIHDR(byteArray, ptr) {
   };
 }
 
+function getCharCodes(str) {
+  return str.split('').map(c => c.charCodeAt(0)).join(' ');
+}
+
 const dataURIScheme = 'data:image/png;base64,';
 
 function convertToDataURI(byteArray) {
@@ -653,11 +654,12 @@ var _crc = require("./crc32");
 
 var _share = require("./share");
 
-function insertChunkPhys(byteArray, ptr, dpr = 1) {
-  const type = [112, 72, 89, 115]; // "pHYs"
+function insertChunkPhys(byteArray, ptr, dpi = 72) {
+  const type = 'pHYs'.split('').map(c => c.charCodeAt(0)); // Number of pixels per unit when DPI is 72
   // Number of pixels per unit when devicePixelRatio is 1
 
   const PX_PER_METER = 2835;
+  const dpr = dpi / 72;
   const pixelsPerMeter = Math.floor(PX_PER_METER * dpr);
   const data = [...(0, _share.bytes)(pixelsPerMeter, 4), ...(0, _share.bytes)(pixelsPerMeter, 4), 1];
   const pHYsChunk = [0, 0, 0, 9, // 9 bytes
@@ -668,7 +670,7 @@ function insertChunkPhys(byteArray, ptr, dpr = 1) {
   return newByteArray;
 }
 
-function writePngDpi(byteArray, dpr = 1) {
+function writePngDpi(byteArray, dpi = 72) {
   const ptr = {
     pos: 0
   };
@@ -681,21 +683,21 @@ function writePngDpi(byteArray, dpr = 1) {
     if (ptr.pos >= byteArray.length) break;
     let chunkLength = (0, _share.readBytes)(byteArray, ptr, 4).map(v => (0, _share.toBin)(v, 8));
     chunkLength = parseInt(chunkLength.join(''), 2);
-    const chunkType = new TextDecoder('utf-8').decode(new Uint8Array((0, _share.readBytes)(byteArray, ptr, 4)));
+    const chunkType = (0, _share.readBytes)(byteArray, ptr, 4).join(' ');
 
-    if (chunkType === 'IDAT') {
+    if (chunkType === (0, _share.getCharCodes)('IDAT')) {
       if (!hasChunkPhys) {
-        newByteArray = insertChunkPhys(byteArray, ptr, dpr);
+        newByteArray = insertChunkPhys(byteArray, ptr, dpi);
         hasChunkPhys = true;
       }
 
       break;
     }
 
-    if (chunkType === 'IEND') break;
+    if (chunkType === (0, _share.getCharCodes)('IEND')) break;
 
     switch (chunkType) {
-      case 'pHYs':
+      case (0, _share.getCharCodes)('pHYs'):
         hasChunkPhys = true;
     }
 
