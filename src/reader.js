@@ -1,9 +1,13 @@
-import {toBin, isPng, readIHDR, readBytes} from './utils'
+import {toBin, isPng, readIHDR, readBytes} from './share'
 
-export function readPngDpi (arrayBuffer) {
+export function parsePngFormat (arrayBuffer) {
   const ptr = {pos: 0}
   const byteArray = new Uint8Array(arrayBuffer)
   return readChunks(byteArray, ptr)
+}
+
+const getCharCodes = str => {
+  return str.split('').map(c => c.charCodeAt(0)).join(' ')
 }
 
 const readpHYs = (byteArray, ptr) => {
@@ -37,12 +41,10 @@ const readChunks = (byteArray, ptr) => {
     let chunkLength = readBytes(byteArray, ptr, 4).map(v => toBin(v, 8))
     chunkLength = parseInt(chunkLength.join(''), 2)
 
-    const chunkType = new TextDecoder('utf-8').decode(
-      new Uint8Array(readBytes(byteArray, ptr, 4)))
-
-    if (chunkType === 'IDAT' || chunkType === 'IEND') break
+    const chunkType = readBytes(byteArray, ptr, 4).join(' ')
+    if (chunkType === getCharCodes('IDAT') || chunkType === getCharCodes('IEND')) break
     switch (chunkType) {
-      case 'pHYs':
+      case getCharCodes('pHYs'):
         dpi = readpHYs(byteArray, ptr)
         break
       default:
