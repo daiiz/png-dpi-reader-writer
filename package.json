@@ -37,5 +37,9 @@
     "lib",
     "package.json",
     "README.md"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/daiiz/png-chunk-pHYs.git"
+  }
 }
