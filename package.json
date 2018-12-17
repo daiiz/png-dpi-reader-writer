@@ -1,7 +1,7 @@
 {
   "name": "png-chunk-phys",
-  "version": "3.1.5",
-  "description": "",
+  "version": "1.0.0",
+  "description": "Reader/Writer for png chunk pHYs on browsers",
   "main": "lib/index.js",
   "scripts": {
     "start": "./node_modules/.bin/http-server -c-1 -p 9006",
@@ -29,5 +29,6 @@
     "npm-run-all": "^4.1.5",
     "watchify": "^3.11.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "private": true
 }
