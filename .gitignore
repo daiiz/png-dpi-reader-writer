@@ -1,2 +1,3 @@
 lib/*.js
+demo/dist/*.js
 node_modules/*
