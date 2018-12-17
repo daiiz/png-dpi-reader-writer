@@ -2,7 +2,7 @@ const {assert} = require('chai')
 const fs = require('fs')
 const {parsePngFormat} = require('../lib/')
 
-describe('parseImages', function () {
+describe('parse images', function () {
   it('detect width, height and dpi from Retina screenshot png image', function () {
     // Screenshot with Retina display taken by macOS screenshot app
     const buf = fs.readFileSync('./test/images/dpi-144.png')
