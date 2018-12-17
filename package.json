@@ -9,7 +9,8 @@
     "build:babel": "./node_modules/.bin/babel src/ --out-dir lib/",
     "build:demo": "browserify demo/src/index.js -v -t babelify -o demo/dist/demo.js",
     "postinstall": "npm run build:babel",
-    "gh-pages": "sh ./tools/gh-pages.sh"
+    "gh-pages": "sh ./tools/gh-pages.sh",
+    "test": "mocha './test/*.js' --timeout 20000 --exit"
   },
   "author": "Daiki Iizuka",
   "license": "MIT",
@@ -19,6 +20,7 @@
     "dpi-aware-image": "github:daiiz/dpi-aware-image#master",
     "gh-pages": "^2.0.1",
     "http-server": "^0.11.1",
+    "mocha": "^5.2.0",
     "watchify": "^3.11.0"
   },
   "dependencies": {
