@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>png-chunk-pHYs</title>
+    <link rel='stylesheet' href='./dist/index.css' />
+  </head>
+  <body>
+    <h1>png-chunk-pHYs reader/writer</h1>
+    <button id='load-image-button'>load sample2.png</button>
+    (Use current window's <code>devicePixelRatio</code>)
+    <div>
+      <dpi-aware-image followdpi id='sample-image'></dpi-aware-image>
+    </div>
+    <div>
+      <!-- Gyazo macOS Retina-->
+      sample.png<br>
+      <dpi-aware-image followdpi src='./images/raw/sample.png'></dpi-aware-image>
+    </div>
+    <div>
+      <!-- Gyazo Extension Retina-->
+      sample2.png<br>
+      <dpi-aware-image followdpi src='./images/raw/sample2.png'></dpi-aware-image>
+    </div>
+    <div>
+      <!-- Gyazo Extension Retina (sample2 -> gen2)-->
+      <!-- https://i.gyazo.com/8120a5842dfe69bdc8dcc0c67c788d4f.png -->
+      gen2.png (raw)<br>
+      <dpi-aware-image followdpi src='./images/gen/gen2.png'></dpi-aware-image>
+      <br>
+      gen2.png (/thumb/1000)<br>
+      <dpi-aware-image followdpi src='./images/gen/gen2-1000.png'></dpi-aware-image>
+      <br>
+      gen3.png (raw)<br>
+      <dpi-aware-image followdpi src='./images/gen/gen3.png'></dpi-aware-image>
+    </div>
+    <br>
+    <br>
+    <script src='./dist/demo.js'></script>
+    <script>
+      document.querySelector('#load-image-button').addEventListener('click', e => {
+        loadImage('./images/raw/sample2.png')
+      })
+    </script>
+  </body>
+</html>

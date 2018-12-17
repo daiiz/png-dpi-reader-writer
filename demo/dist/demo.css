@@ -1,0 +1,27 @@
+body, h1 {
+  font-family: roboto;
+}
+
+div {
+  margin: 15px;
+}
+
+input {
+  width: 600px;
+  max-width: 90%;
+  padding: 4px;
+  margin-left: 10px;
+  font-size: 9pt;
+  font-family: monospace;
+}
+
+div.img {
+  padding: 10px;
+}
+
+.img.default {
+  background-color: #efefef;
+  min-width: calc(100% - 50px);
+  width: fit-content;
+  border-radius: 1px;
+}
