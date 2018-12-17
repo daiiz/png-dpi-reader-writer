@@ -4,6 +4,12 @@ Reader/Writer for png image's pHYs chunk on browsers.
 
 [![CircleCI](https://circleci.com/gh/daiiz/png-chunk-pHYs/tree/master.svg?style=svg)](https://circleci.com/gh/daiiz/png-chunk-pHYs/tree/master)
 
+
+## Installation
+```
+$ npm install png-chunk-phys
+```
+
 ## Usage
 
 ### Reader
