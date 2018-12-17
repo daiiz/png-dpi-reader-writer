@@ -5,12 +5,12 @@
   "main": "lib/index.js",
   "scripts": {
     "start": "./node_modules/.bin/http-server -c-1 -p 9006",
-    "build:babel": "./node_modules/.bin/babel src/ --out-dir lib/",
-    "build:demo": "browserify demo/src/index.js -v -t babelify -o demo/dist/demo.js",
-    "watch:demo": "watchify demo/src/index.js -v -t babelify -o demo/dist/demo.js",
+    "build": "./node_modules/.bin/babel src/ --out-dir lib/",
     "postinstall": "npm run build:babel",
-    "gh-pages": "sh ./tools/gh-pages.sh",
-    "test": "mocha './test/*.js' --timeout 20000 --exit"
+    "test": "mocha './test/*.js' --timeout 20000 --exit",
+    "build-demo": "browserify demo/src/index.js -v -t babelify -o demo/dist/demo.js",
+    "watch-demo": "watchify demo/src/index.js -v -t babelify -o demo/dist/demo.js",
+    "gh-pages": "sh ./tools/gh-pages.sh"
   },
   "author": "Daiki Iizuka",
   "license": "MIT",
