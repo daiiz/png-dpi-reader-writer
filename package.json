@@ -1,6 +1,6 @@
 {
   "name": "png-chunk-phys",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Reader/Writer for png chunk pHYs on browsers",
   "main": "lib/index.js",
   "scripts": {
