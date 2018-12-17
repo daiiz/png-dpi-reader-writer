@@ -12,7 +12,7 @@ const loadImage = async srcUrl => {
   const arrayBuffer = await res.arrayBuffer();
   if (!arrayBuffer) return; // 遠回しだが、convertToDataURIの動作確認を兼ねている
 
-  const base64DataURI = (0, _src.convertToDataURI)(new Uint8Array(arrayBuffer));
+  const base64DataURI = (0, _src.convertToDataURI)(arrayBuffer);
   const orgByteArray = (0, _src.convertToByteArray)(base64DataURI);
   const dpr = window.devicePixelRatio;
   const genByteArray = (0, _src.writePngDpi)(orgByteArray, dpr * 72);
@@ -624,7 +624,8 @@ function getCharCodes(str) {
 
 const dataURIScheme = 'data:image/png;base64,';
 
-function convertToDataURI(byteArray) {
+function convertToDataURI(arrayBuffer) {
+  const byteArray = new Uint8Array(arrayBuffer);
   return dataURIScheme + btoa(byteArray.reduce((data, byte) => {
     return data + String.fromCharCode(byte);
   }, ''));
@@ -670,10 +671,11 @@ function insertChunkPhys(byteArray, ptr, dpi = 72) {
   return newByteArray;
 }
 
-function writePngDpi(byteArray, dpi = 72) {
+function writePngDpi(arrayBuffer, dpi = 72) {
   const ptr = {
     pos: 0
   };
+  const byteArray = new Uint8Array(arrayBuffer);
   if (!(0, _share.isPng)(byteArray, ptr)) return byteArray;
   (0, _share.readIHDR)(byteArray, ptr);
   let hasChunkPhys = false;
