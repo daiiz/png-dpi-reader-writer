@@ -40,7 +40,8 @@ export function getCharCodes (str) {
 
 const dataURIScheme = 'data:image/png;base64,'
 
-export function convertToDataURI (byteArray) {
+export function convertToDataURI (arrayBuffer) {
+  const byteArray = new Uint8Array(arrayBuffer)
   return dataURIScheme + btoa(byteArray.reduce((data, byte) => {
     return data + String.fromCharCode(byte)
   }, ''))

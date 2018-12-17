@@ -7,6 +7,7 @@ cp README.md gh-pages/README.md
 cp package.json gh-pages/package.json
 cp -r demo gh-pages/demo
 cp -r lib gh-pages/lib
+cp -r .circleci gh-pages/.circleci
 
 rm -r ./gh-pages/demo/src
 

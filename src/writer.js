@@ -31,8 +31,9 @@ function insertChunkPhys (byteArray, ptr, dpi=72) {
   return newByteArray
 }
 
-export function writePngDpi (byteArray, dpi=72) {
+export function writePngDpi (arrayBuffer, dpi=72) {
   const ptr = {pos: 0}
+  const byteArray = new Uint8Array(arrayBuffer)
   if (!isPng(byteArray, ptr)) return byteArray
   readIHDR(byteArray, ptr)
 

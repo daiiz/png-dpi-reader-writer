@@ -6,7 +6,7 @@ const loadImage = async srcUrl => {
   const arrayBuffer = await res.arrayBuffer()
   if (!arrayBuffer) return
   // 遠回しだが、convertToDataURIの動作確認を兼ねている
-  const base64DataURI = convertToDataURI(new Uint8Array(arrayBuffer))
+  const base64DataURI = convertToDataURI(arrayBuffer)
   const orgByteArray = convertToByteArray(base64DataURI)
   const dpr = window.devicePixelRatio
   const genByteArray = writePngDpi(orgByteArray, dpr * 72)
