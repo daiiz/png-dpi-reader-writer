@@ -10,7 +10,7 @@ const loadImage = async srcUrl => {
     mode: 'cors'
   });
   const arrayBuffer = await res.arrayBuffer();
-  if (!arrayBuffer) return; // 遠回しだが、base64 stringを渡す実験
+  if (!arrayBuffer) return; // 遠回しだが、convertToDataURIの動作確認を兼ねている
 
   const base64DataURI = (0, _src.convertToDataURI)(new Uint8Array(arrayBuffer));
   const orgByteArray = (0, _src.convertToByteArray)(base64DataURI);
