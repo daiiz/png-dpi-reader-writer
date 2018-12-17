@@ -1,5 +1,5 @@
 import {crc} from './crc32'
-import {toBin, bytes, isPng, readBytes, readIHDR} from './utils'
+import {toBin, bytes, isPng, readBytes, readIHDR} from './share'
 
 function insertChunkPhys (byteArray, ptr, dpr = 1) {
   const type = [112, 72, 89, 115] // "pHYs"
