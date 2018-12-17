@@ -10,7 +10,7 @@ Reader/Writer for png image's pHYs chunk on browsers.
 Detect width, height and DPI for PNG image.
 ```js
 const res = await fetch(srcUrl, {mode: 'cors'})
-arrayBuffer = await res.arrayBuffer()
+const arrayBuffer = await res.arrayBuffer()
 
 const {width, height, dpi} = parsePngFormat(arrayBuffer)
 ```
