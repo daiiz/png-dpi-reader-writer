@@ -1,8 +1,14 @@
-# png-chunk-pHYs
+# png-dpi-reader-writer
 
 Reader/Writer for png image's pHYs chunk on browsers.
 
-[![CircleCI](https://circleci.com/gh/daiiz/png-chunk-pHYs/tree/master.svg?style=svg)](https://circleci.com/gh/daiiz/png-chunk-pHYs/tree/master)
+[![CircleCI](https://circleci.com/gh/daiiz/png-dpi-reader-writer/tree/master.svg?style=svg)](https://circleci.com/gh/daiiz/png-dpi-reader-writer/tree/master)
+
+
+## Installation
+```
+$ npm install png-dpi-reader-writer
+```
 
 ## Usage
 
@@ -29,7 +35,7 @@ img.src = convertToDataURI(newByteArray)
 $ npm run start
 ```
 - http://localhost:9006/demo/index.html
-- https://daiiz.github.io/png-chunk-pHYs/demo/index.html
+- https://daiiz.github.io/png-dpi-reader-writer/demo/index.html
 
 ## Related projects
 - https://github.com/daiiz/dpi-aware-image

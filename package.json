@@ -1,6 +1,6 @@
 {
-  "name": "png-chunk-phys",
-  "version": "0.0.1",
+  "name": "png-dpi-reader-writer",
+  "version": "0.0.2",
   "description": "Reader/Writer for png chunk pHYs on browsers",
   "main": "lib/index.js",
   "scripts": {
@@ -37,5 +37,9 @@
     "lib",
     "package.json",
     "README.md"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/daiiz/png-dpi-reader-writer.git"
+  }
 }
