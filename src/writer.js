@@ -1,10 +1,14 @@
 import {crc} from './crc32'
-import {toBin, bytes, isPng, readBytes, readIHDR} from './share'
+import {toBin, bytes, getCharCodes, isPng, readBytes, readIHDR} from './share'
 
-function insertChunkPhys (byteArray, ptr, dpr = 1) {
-  const type = [112, 72, 89, 115] // "pHYs"
+function insertChunkPhys (byteArray, ptr, dpi=72) {
+  const type = 'pHYs'.split('').map(c => c.charCodeAt(0))
+
+  // Number of pixels per unit when DPI is 72
   // Number of pixels per unit when devicePixelRatio is 1
   const PX_PER_METER = 2835
+
+  const dpr = dpi / 72
   const pixelsPerMeter = Math.floor(PX_PER_METER * dpr)
   const data = [
     ...bytes(pixelsPerMeter, 4),
@@ -27,7 +31,7 @@ function insertChunkPhys (byteArray, ptr, dpr = 1) {
   return newByteArray
 }
 
-export function writePngDpi (byteArray, dpr=1) {
+export function writePngDpi (byteArray, dpi=72) {
   const ptr = {pos: 0}
   if (!isPng(byteArray, ptr)) return byteArray
   readIHDR(byteArray, ptr)
@@ -40,21 +44,19 @@ export function writePngDpi (byteArray, dpr=1) {
     let chunkLength = readBytes(byteArray, ptr, 4).map(v => toBin(v, 8))
     chunkLength = parseInt(chunkLength.join(''), 2)
 
-    const chunkType = new TextDecoder('utf-8').decode(
-      new Uint8Array(readBytes(byteArray, ptr, 4)))
-
-    if (chunkType === 'IDAT') {
+    const chunkType = readBytes(byteArray, ptr, 4).join(' ')
+    if (chunkType === getCharCodes('IDAT')) {
       if (!hasChunkPhys) {
-        newByteArray = insertChunkPhys(byteArray, ptr, dpr)
+        newByteArray = insertChunkPhys(byteArray, ptr, dpi)
         hasChunkPhys = true
       }
       break
     }
 
-    if (chunkType === 'IEND') break
+    if (chunkType === getCharCodes('IEND')) break
 
     switch (chunkType) {
-      case 'pHYs':
+      case getCharCodes('pHYs'):
         hasChunkPhys = true
     }
     ptr.pos += chunkLength + 4 // CRC

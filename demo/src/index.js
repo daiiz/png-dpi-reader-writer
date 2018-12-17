@@ -9,7 +9,7 @@ const loadImage = async srcUrl => {
   const base64DataURI = convertToDataURI(new Uint8Array(arrayBuffer))
   const orgByteArray = convertToByteArray(base64DataURI)
   const dpr = window.devicePixelRatio
-  const genByteArray = writePngDpi(orgByteArray, dpr)
+  const genByteArray = writePngDpi(orgByteArray, dpr * 72)
   showImage(convertToDataURI(genByteArray))
 }
 
