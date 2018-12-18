@@ -564,7 +564,6 @@ const readChunks = (byteArray, ptr) => {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.bytes = bytes;
 exports.isPng = isPng;
 exports.readBytes = readBytes;
 exports.readIHDR = readIHDR;
@@ -581,24 +580,18 @@ const toHex = (value, digits) => value.toString(16).padStart(digits, '0');
 
 exports.toHex = toHex;
 
-function bytes(num, bytes) {
-  const binStr = num.toString(2).padStart(bytes * 8, '0');
-  const binArr = binStr.match(/\d{8}/g);
-  return binArr.map(v => parseInt(v, 2));
-}
-
 function isPng(byteArray, ptr) {
   const pngSignature = '89 50 4E 47 0D 0A 1A 0A';
   const signature = readBytes(byteArray, ptr, 8).map(v => toHex(v, 2));
   return signature.join(' ').toUpperCase() === pngSignature;
 }
 
-function readBytes(byteArray, ptr, bytes) {
+function readBytes(byteArray, ptr, byteLength) {
   const {
     pos
   } = ptr;
-  const res = byteArray.slice(pos, pos + bytes);
-  ptr.pos += bytes;
+  const res = byteArray.slice(pos, pos + byteLength);
+  ptr.pos += byteLength;
   return Array.from(res);
 }
 
@@ -655,6 +648,12 @@ var _crc = require("./crc32");
 
 var _share = require("./share");
 
+function bytes(num, byteLength) {
+  const binStr = num.toString(2).padStart(byteLength * 8, '0');
+  const binArr = binStr.match(/\d{8}/g);
+  return binArr.map(v => parseInt(v, 2));
+}
+
 function insertChunkPhys(byteArray, ptr, dpi = 72) {
   const type = 'pHYs'.split('').map(c => c.charCodeAt(0)); // Number of pixels per unit when DPI is 72
   // Number of pixels per unit when devicePixelRatio is 1
@@ -662,9 +661,9 @@ function insertChunkPhys(byteArray, ptr, dpi = 72) {
   const PX_PER_METER = 2835;
   const dpr = dpi / 72;
   const pixelsPerMeter = Math.floor(PX_PER_METER * dpr);
-  const data = [...(0, _share.bytes)(pixelsPerMeter, 4), ...(0, _share.bytes)(pixelsPerMeter, 4), 1];
+  const data = [...bytes(pixelsPerMeter, 4), ...bytes(pixelsPerMeter, 4), 1];
   const pHYsChunk = [0, 0, 0, 9, // 9 bytes
-  ...type, ...data, ...(0, _share.bytes)((0, _crc.crc)([...type, ...data]), 4)];
+  ...type, ...data, ...bytes((0, _crc.crc)([...type, ...data]), 4)];
   const pos = ptr.pos - 8;
   const newByteArray = new Uint8Array([...Array.from(byteArray.slice(0, pos)), ...pHYsChunk, ...Array.from(byteArray.slice(pos))]);
   ptr.pos += pHYsChunk.length;
