@@ -2,22 +2,16 @@ export const toBin = (value, digits) => value.toString(2).padStart(digits, '0')
 
 export const toHex = (value, digits) => value.toString(16).padStart(digits, '0')
 
-export function bytes (num, bytes) {
-  const binStr = num.toString(2).padStart(bytes * 8, '0')
-  const binArr = binStr.match(/\d{8}/g)
-  return binArr.map(v => parseInt(v, 2))
-}
-
 export function isPng (byteArray, ptr) {
   const pngSignature = '89 50 4E 47 0D 0A 1A 0A'
   const signature = readBytes(byteArray, ptr, 8).map(v => toHex(v, 2))
   return signature.join(' ').toUpperCase() === pngSignature
 }
 
-export function readBytes (byteArray, ptr, bytes) {
+export function readBytes (byteArray, ptr, byteLength) {
   const {pos} = ptr
-  const res = byteArray.slice(pos, pos + bytes)
-  ptr.pos += bytes
+  const res = byteArray.slice(pos, pos + byteLength)
+  ptr.pos += byteLength
   return Array.from(res)
 }
 
