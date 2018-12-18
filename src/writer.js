@@ -1,5 +1,11 @@
 import {crc} from './crc32'
-import {toBin, bytes, getCharCodes, isPng, readBytes, readIHDR} from './share'
+import {toBin, getCharCodes, isPng, readBytes, readIHDR} from './share'
+
+function bytes (num, byteLength) {
+  const binStr = num.toString(2).padStart(byteLength * 8, '0')
+  const binArr = binStr.match(/\d{8}/g)
+  return binArr.map(v => parseInt(v, 2))
+}
 
 function insertChunkPhys (byteArray, ptr, dpi=72) {
   const type = 'pHYs'.split('').map(c => c.charCodeAt(0))
