@@ -1,4 +1,5 @@
-import {convertToByteArray, convertToDataURI, writePngDpi} from '../../src/'
+import '@babel/polyfill'
+import {convertToByteArray, convertToDataURI, writePngDpi} from '../../lib/'
 import {DpiAwareImage} from 'dpi-aware-image'
 
 const loadImage = async srcUrl => {
