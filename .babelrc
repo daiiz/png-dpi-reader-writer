@@ -1,5 +1,15 @@
 {
-  "plugins": [
-    "@babel/plugin-transform-modules-commonjs"
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "browsers": [
+            "last 2 versions",
+            "Safari 9"
+          ]
+        }
+      }
+    ]
   ]
 }
