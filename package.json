@@ -1,6 +1,6 @@
 {
   "name": "png-dpi-reader-writer",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Reader/Writer for png chunk pHYs on browsers",
   "main": "lib/index.js",
   "scripts": {
@@ -8,10 +8,12 @@
     "watch:demo": "watchify demo/src/index.js -v -t babelify -o demo/dist/demo.js",
     "build": "run-s build:*",
     "build:clean": "if test -d ./lib; then rm -r ./lib; fi",
-    "build:babel": "./node_modules/.bin/babel src/ --out-dir lib/ --minified",
+    "build:babel": "./node_modules/.bin/babel src/ --out-dir lib/",
     "build:demo": "browserify demo/src/index.js -v -t babelify -o demo/dist/demo.js",
+    "pretest": "npm run build",
     "test": "mocha './test/*.js' --timeout 20000 --exit",
     "gh-pages": "sh ./tools/gh-pages.sh",
+    "prepublishOnly": "npm test",
     "npm-publish": "npm run build:babel && npm run test && npm publish"
   },
   "author": "Daiki Iizuka <iizuka@daiiz.org>",
