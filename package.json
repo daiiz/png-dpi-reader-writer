@@ -1,6 +1,6 @@
 {
   "name": "png-dpi-reader-writer",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Reader/Writer for png chunk pHYs on browsers",
   "main": "lib/index.js",
   "scripts": {
