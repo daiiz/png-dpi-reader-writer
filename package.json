@@ -10,11 +10,11 @@
     "build:clean": "if test -d ./lib; then rm -r ./lib; fi",
     "build:babel": "./node_modules/.bin/babel src/ --out-dir lib/",
     "build:demo": "browserify demo/src/index.js -v -t babelify -o demo/dist/demo.js",
+    "gh-pages": "sh ./tools/gh-pages.sh",
     "pretest": "npm run build",
     "test": "mocha './test/*.js' --timeout 20000 --exit",
-    "gh-pages": "sh ./tools/gh-pages.sh",
     "prepublishOnly": "npm test",
-    "npm-publish": "npm run build:babel && npm run test && npm publish"
+    "postpublish": "git push origin --tags && git push origin master"
   },
   "author": "Daiki Iizuka <iizuka@daiiz.org>",
   "license": "MIT",
